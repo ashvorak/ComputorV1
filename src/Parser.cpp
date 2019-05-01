@@ -1,7 +1,9 @@
 #include "../inc/Parser.h"
 
 #include <regex>
+#include <cmath>
 #include <iostream>
+#include <algorithm>
 
 Parser::Parser() : _errorManager(new ErrorManager())
 {}
@@ -15,50 +17,63 @@ Parser* Parser::get()
     return &self;
 }
 
-void Parser::parseMonomial(std::string& monomial, mQuadraticEquation& qEquation, bool isReverse)
+void Parser::ParseMonomial(const std::string& addend, bool isInverse, mQuadraticEquation& qEquation)
 {
-    std::smatch match;
-    std::regex rx("(\\d)");
+	int		x;
+	double	value;
 
-    int x = std::stoi(&monomial.back());
-
-    std::regex_search(monomial, match, rx);
-
-    double value = std::stod(match.str()); 
-
-    value = (isReverse) ? -value : value;
-
+	//refactor
+	if (addend != "X")
+    	x = std::stod(&addend[6]);//if > than 1 digit
+	else
+		x = 1;
+	if (addend.front() != 'X')
+	value = std::stoi(&addend.front());
+	if (isInverse)
+		value = -value;
     if (qEquation.find(x) == qEquation.end())
-    {
         qEquation.insert(std::pair<int, double>(x, value));
-    }
     else
-    {
         qEquation[x] += value;
+}
+
+void Parser::ParseMonomials(const std::string& equation, FormOfEquation formOfEquation, mQuadraticEquation& qEquation)
+{
+	u_int32_t	equal = equation.find("=");
+	std::regex	rx;
+
+	if (formOfEquation == StandartForm)
+		rx.assign(sign + "?" + monomial_standart);
+	else
+		rx.assign(sign + "?" + monomial_natural);	
+    auto begin = std::sregex_iterator(equation.begin(), equation.end(), rx);
+    auto end = std::sregex_iterator();
+	for (std::sregex_iterator it = begin; it != end; ++it) 
+    {
+        std::smatch match = *it;
+		bool isInverse = (equal < match.position()) ? true : false;
+		if (!match[1].str().empty() && match[1].str().front() == '-')
+			isInverse = !isInverse;
+        ParseMonomial(match[3].str(), isInverse, qEquation);
     }
 }
 
-void Parser::parse(std::string expression, mQuadraticEquation& qEquation)
+mQuadraticEquation Parser::Parse(const std::string& equation)
 {
-    std::smatch match;
-    std::regex  rx("((\\+|\\-) )?\\d \\* X\\^\\d");
-    auto expression_begin = std::sregex_iterator(expression.begin(), expression.end(), rx);
-    auto expression_end = std::sregex_iterator();
+	FormOfEquation		formOfEquation = _errorManager->EquationAnalyse(equation);
+	mQuadraticEquation	qEquation;
 
-    _errorManager->EquationAnalyse(expression);
-
-    int equation = expression.find("=");
-    std::cout << " = pos :" << equation << std::endl;
-
-    for (std::sregex_iterator it = expression_begin; it != expression_end; ++it) 
-    {
-        std::smatch match = *it;
-        std::string match_str = match.str();
-        std::cout << match_str << " position" << match.position() << std::endl;
-        parseMonomial(match_str, qEquation, (equation < match.position()) ? true : false);
-    }
-
-    std::cout << qEquation.x0 << std::endl;
-    std::cout << qEquation.x1 << std::endl;
-    std::cout << qEquation.x2 << std::endl;
+	ParseMonomials(equation, formOfEquation, qEquation);
+	std::cout << "Reduced form: ";
+	for (const auto& qEquationPair : qEquation)
+	{
+		//all to out string 
+		if (qEquationPair != *(qEquation.begin()))
+			std::cout << ((qEquationPair.second > 0) ? "+ " : "- ");
+		if (formOfEquation != NaturalForm && fabs(qEquationPair.second) > 1)//error! separate condition (1 in standart form)
+			std::cout << fabs(qEquationPair.second) << " * ";
+		std::cout << "X" << (formOfEquation == NaturalForm && (qEquationPair.first < 2) ? "" : "^" + std::to_string(qEquationPair.first)) << " ";
+	}
+	std::cout << "= 0" << std::endl;
+	return qEquation;
 }

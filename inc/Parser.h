@@ -1,8 +1,10 @@
 #pragma once
 
 #include <memory>
+#include <map>
 #include "ErrorManager.h"
-#include "Computor.h"
+
+using mQuadraticEquation = std::map<int, double>;
 
 class Parser
 {
@@ -12,11 +14,12 @@ class Parser
 
     std::unique_ptr<ErrorManager> _errorManager;
 
-    void parseMonomial(std::string& monomial, mQuadraticEquation& qEquation, bool isReverse);
+	void ParseMonomial(const std::string& addend, bool isInverse, mQuadraticEquation& qEquation);
+	void ParseMonomials(const std::string& equation, FormOfEquation formOfEquation, mQuadraticEquation& qEquation);
 
 public:
 
     static Parser* get();
 
-    void parse(std::string expression, mQuadraticEquation& qEquation);
+	mQuadraticEquation Parse(const std::string& equation);
 };

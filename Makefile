@@ -14,7 +14,7 @@ NAME = computor
 
 CC = g++
 
-CFLAGS = -Wall -Wextra -Werror -std=c++11
+CFLAGS = -Wall -Wextra -Werror -std=c++14
 
 SRC = 	./src/main.cpp ./src/Parser.cpp ./src/ErrorManager.cpp ./src/Solver.cpp
 

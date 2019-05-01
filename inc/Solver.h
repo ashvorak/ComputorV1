@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Computor.h"
+#include "Parser.h"
 
 class Solver
 {
@@ -11,6 +11,6 @@ public:
 
     static Solver* get();
 
-    void  resolve(mQuadraticEquation& qEquation);
+    void  Resolve(const std::string& equation);
 
 };

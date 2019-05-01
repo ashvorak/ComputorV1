@@ -1,7 +1,6 @@
 #include "../inc/ErrorManager.h"
 
 #include <regex>
-#include <string>
 #include <iostream>
 
 ErrorManager::ErrorManager() {}
@@ -20,14 +19,17 @@ bool ErrorManager::SyntaxAnalyse(const std::string& equation)
 	return true;
 }
 
+inline std::string generateRegex(const std::string& monomial)
+{
+	return ("^(" + sign + "?" + monomial + "( " + sign + monomial 
+			+ ")* = (0|(" + sign + "?" + monomial + "( " + sign + monomial + ")*)))$");
+}
+
 FormOfEquation ErrorManager::LexicalAnalyse(const std::string& equation)
 {
     std::smatch match;
-    std::regex	rx_standart("^(" + sign + "?" + monomial_standart + "( " + sign + monomial_standart 
-						+ ")* = (0|(" + sign + "?" + monomial_standart + "( " + sign + monomial_standart + ")*)))$");
-
-	std::regex	rx_natural("^(" + sign + "?" + monomial_natural + "( " + sign + monomial_natural 
-						+ ")* = (0|(" + sign + "?" + monomial_natural + "( " + sign + monomial_natural + ")*)))$");
+    std::regex	rx_standart(generateRegex(monomial_standart));
+	std::regex	rx_natural(generateRegex(monomial_natural));
 
     if (std::regex_search(equation, match, rx_standart))
 		return StandartForm;

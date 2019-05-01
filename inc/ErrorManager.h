@@ -24,7 +24,7 @@ public:
     ErrorManager();
     ~ErrorManager();
 
-    FormOfEquation EquationAnalyse(const std::string& expression);
+    FormOfEquation	EquationAnalyse(const std::string& expression);
 
     class SyntaxException : public std::exception {
 

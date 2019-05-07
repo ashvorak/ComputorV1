@@ -13,16 +13,17 @@ bool ErrorManager::SyntaxAnalyse(const std::string& equation)
 
 	for(uint32_t i = 0; i < equation.length(); i++)
 	{
-		if ((valid_characters.find(equation[i]) == std::string::npos) && !isdigit(equation[i]))
+		if ((valid_characters.find(equation[i]) == std::string::npos) 
+				&& !isdigit(equation[i]))
 			return false;
 	}
 	return true;
 }
 
-inline std::string generateRegex(const std::string& monomial)
+static inline std::string generateRegex(const std::string& monomial)
 {
-	return ("^(" + sign + "?" + monomial + "( " + sign + monomial 
-			+ ")* = (0|(" + sign + "?" + monomial + "( " + sign + monomial + ")*)))$");
+	return ("^(" + sign + "?" + monomial + "( *" + sign + monomial 
+			+ ")* = *((0 *)|(" + sign + "?" + monomial + "( *" + sign + monomial + ")*)))$");
 }
 
 FormOfEquation ErrorManager::LexicalAnalyse(const std::string& equation)

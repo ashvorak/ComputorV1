@@ -78,18 +78,22 @@ mQuadraticEquation Parser::Parse(const std::string& equation)
 	FormOfEquation		formOfEquation = _errorManager->EquationAnalyse(equation);
 
 	ParseMonomials(equation, formOfEquation, qEquation);
+	for (const auto& qEquationPair : qEquation)
+	{
+		std::cout << "X : " << qEquationPair.first << " value : " << qEquationPair.second << std::endl; 
+	}
 	std::cout << "Reduced form : ";
 	for (const auto& qEquationPair : qEquation)
 	{
 		if (qEquationPair != *(qEquation.begin()))
 			std::cout << ((qEquationPair.second > 0) ? "+ " : "- ");
 		if (!(formOfEquation == NaturalForm && fabs(qEquationPair.second) == 1))
-			std::cout << fabs(qEquationPair.second);
-		if (!(formOfEquation == NaturalForm && qEquationPair.second == 0))
-			std::cout << " * ";
+			std::cout << fabs(qEquationPair.second) << " ";
+		if (!(formOfEquation == NaturalForm && (qEquationPair.first == 0 || fabs(qEquationPair.second) == 1)))
+			std::cout << "* ";
 		if (!(formOfEquation == NaturalForm && qEquationPair.first == 0))
-			std::cout << "X" << (formOfEquation == NaturalForm && (qEquationPair.first != 1)
-						? "" : "^" + std::to_string(qEquationPair.first)) << " ";
+			std::cout << "X" << (!(formOfEquation == NaturalForm && qEquationPair.first < 2)
+						? "^" + std::to_string(qEquationPair.first) : "") << " ";
 	}
 	std::cout << "= 0" << std::endl;
 	return qEquation;

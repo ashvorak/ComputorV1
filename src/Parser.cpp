@@ -66,25 +66,20 @@ void Parser::ParseMonomials(const std::string& equation, FormOfEquation formOfEq
 		bool isInverse = (equal < match.position()) ? true : false;
 		if (!match[1].str().empty() && match[1].str().front() == '-')
 			isInverse = !isInverse;
-		std::cout << match.str() << std::endl;
         ParseMonomial(match[3].str(), isInverse, qEquation);
     }
 }
 
 mQuadraticEquation Parser::Parse(const std::string& equation)
 {
-	mQuadraticEquation	qEquation;
+	mQuadraticEquation	qEquation = {{0, 0.0}, {1, 0.0}, {2, 0.0}};
 	FormOfEquation		formOfEquation = _errorManager->EquationAnalyse(equation);
 
 	ParseMonomials(equation, formOfEquation, qEquation);
-	for (const auto& qEquationPair : qEquation)
-	{
-		std::cout << "X : " << qEquationPair.first << " value : " << qEquationPair.second << std::endl; 
-	}
 	std::cout << "Reduced form : ";
 	for (const auto& qEquationPair : qEquation)
 	{
-		if (qEquationPair != *(qEquation.begin()))
+		if (qEquationPair != *(qEquation.begin()) || qEquationPair.second < 0)
 			std::cout << ((qEquationPair.second >= 0) ? "+ " : "- ");
 		if (!(formOfEquation == NaturalForm && fabs(qEquationPair.second) == 1))
 			std::cout << fabs(qEquationPair.second) << " ";
@@ -95,5 +90,7 @@ mQuadraticEquation Parser::Parse(const std::string& equation)
 						? "^" + std::to_string(qEquationPair.first) : "") << " ";
 	}
 	std::cout << "= 0" << std::endl;
+	if (!qEquation.empty())
+		std::cout << "Polynomial degree: " << (--qEquation.cend())->first << std::endl;
 	return qEquation;
 }

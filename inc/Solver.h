@@ -7,6 +7,8 @@ class Solver
     Solver();
     ~Solver();
 
+    void CalculateRoots(double discriminate, mQuadraticEquation& qEquation);
+
 public:
 
     static Solver* get();

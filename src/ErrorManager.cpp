@@ -50,6 +50,9 @@ FormOfEquation ErrorManager::EquationAnalyse(const std::string& equation)
 		throw LexicalException();
 	std::cout << "Lexical Analyse : OK." << std::endl;
 	std::cout << "Equation is valid." << std::endl;
+	std::cout << "Form of equation : " 
+			  << ((formOfEquation == StandartForm) ? "Standart." : "Natural")
+			  << std::endl;
 	return formOfEquation;
 }
 

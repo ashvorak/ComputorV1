@@ -23,7 +23,7 @@ bool ErrorManager::SyntaxAnalyse(const std::string& equation)
 static inline std::string generateRegex(const std::string& monomial)
 {
 	return ("^(" + sign + "?" + monomial + "( *" + sign + monomial 
-			+ ")* = *((0 *)|(" + sign + "?" + monomial + "( *" + sign + monomial + ")*)))$");
+			+ ")* *= *((0 *)|(" + sign + "?" + monomial + "( *" + sign + monomial + ")*)))$");
 }
 
 FormOfEquation ErrorManager::LexicalAnalyse(const std::string& equation)
@@ -48,10 +48,10 @@ FormOfEquation ErrorManager::EquationAnalyse(const std::string& equation)
 	std::cout << "Syntax Analyse : OK." << std::endl;
 	if ((formOfEquation = LexicalAnalyse(equation)) == ErrorForm)
 		throw LexicalException();
-	std::cout << "Lexical Analyse : OK." << std::endl;
+	std::cout << "Lexical Analyse: OK." << std::endl;
 	std::cout << "Equation is valid." << std::endl;
-	std::cout << "Form of equation : " 
-			  << ((formOfEquation == StandartForm) ? "Standart." : "Natural")
+	std::cout << "Form of equation: " 
+			  << ((formOfEquation == StandartForm) ? "Standart." : "Natural.")
 			  << std::endl;
 	return formOfEquation;
 }

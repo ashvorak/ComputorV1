@@ -75,14 +75,15 @@ mQuadraticEquation Parser::Parse(const std::string& equation)
 	mQuadraticEquation	qEquation = {{0, 0.0}, {1, 0.0}, {2, 0.0}};
 	FormOfEquation		formOfEquation = _errorManager->EquationAnalyse(equation);
 
+	std::cout << "Quadrantic Equation: c * X^0 + b * X^1 + a * X^2 = 0" << std::endl;
 	ParseMonomials(equation, formOfEquation, qEquation);
-	std::cout << "Reduced form : ";
+	std::cout << "Reduced form: ";
 	for (const auto& qEquationPair : qEquation)
 	{
 		if (qEquationPair != *(qEquation.begin()) || qEquationPair.second < 0)
 			std::cout << ((qEquationPair.second >= 0) ? "+ " : "- ");
-		if (!(formOfEquation == NaturalForm && fabs(qEquationPair.second) == 1))
-			std::cout << fabs(qEquationPair.second) << " ";
+		//if (!(formOfEquation == NaturalForm && qEquationPair.second == 0))
+		std::cout << fabs(qEquationPair.second) << " ";
 		if (!(formOfEquation == NaturalForm && (qEquationPair.first == 0 || fabs(qEquationPair.second) == 1)))
 			std::cout << "* ";
 		if (!(formOfEquation == NaturalForm && qEquationPair.first == 0))

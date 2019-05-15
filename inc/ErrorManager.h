@@ -3,8 +3,8 @@
 #include <string>
 
 const std::string sign = "((\\+|\\-) *)";
-const std::string monomial_standart = "(\\d+(.?\\d+)? *\\*  *X\\^(0|[1-9][0-9]*))";
-const std::string monomial_natural = "((\\d+(.?\\d+)?( *\\*  *X(\\^([1-9][0-9]*))?)?)|X((\\^([1-9][0-9]*))?)?)";
+const std::string monomial_standart = "(\\d+(.?\\d+)?( )*\\*( )*X\\^(0|[1-9][0-9]*))";
+const std::string monomial_natural = "((\\d+(.?\\d+)?(( )*\\*( )*X(\\^([1-9][0-9]*))?)?)|X((\\^([1-9][0-9]*))?)?)";
 
 enum FormOfEquation 
 {

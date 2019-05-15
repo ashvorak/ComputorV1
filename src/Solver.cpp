@@ -13,30 +13,50 @@ Solver* Solver::get()
     return &self;
 }
 
-inline double CalculateDiscriminate(mQuadraticEquation& qEquation)
+static inline double CalculateDiscriminate(mQuadraticEquation& qEquation)
 {
     return (std::pow(qEquation[1], 2) - 4 * qEquation[0] * qEquation[2]);
 }
 
 void Solver::CalculateRoots(double discriminate, mQuadraticEquation& qEquation)
 {
-    double x1;
-    double x2;
+    double a;
+    double b;
 
     if (qEquation[2] == 0)
     {
-        std::cout << "X = " << - qEquation[0] / qEquation[1] << std::endl;
+        if (qEquation[1] == 0)
+            std::cout << "There are no solutions. Try to enter real quadrantic equation :)." << std::endl;
+        else
+        {
+            std::cout << "The solution is:" << std::endl;
+            std::cout << "X = " << - qEquation[0] / qEquation[1] << std::endl;
+        }
         return;
     }
-    x1 = ((-qEquation[1]) + std::sqrt(discriminate)) / (2 * qEquation[2]);
-    x2 = ((-qEquation[1]) - std::sqrt(discriminate)) / (2 * qEquation[2]);
-    if (x1 != x2)
+    std::cout << "Discriminate = " << discriminate << std::endl;
+    a = (-qEquation[1]) / (2 * qEquation[2]);
+    b = std::sqrt(fabs(discriminate)) / (2 * qEquation[2]);
+    if (discriminate >= 0)
     {
-        std::cout << "X1 = " << x1 << std::endl;
-        std::cout << "X2 = " << x2 << std::endl;
+        if ((a + b) != (a - b))
+        {
+            std::cout << "Discriminant is strictly positive, the two solutions are:" << std::endl;
+            std::cout << "X1 = " << a + b << std::endl;
+            std::cout << "X2 = " << a - b << std::endl;
+        }
+        else
+        {
+            std::cout << "Discriminant is 0, the solution is:" << std::endl;
+            std::cout << "X = " << a + b << std::endl;
+        }
     }
     else
-        std::cout << "X = " << x1 << std::endl;
+    {
+        std::cout << "Discriminant is strictly negative, the two solutions are:" << std::endl;
+        std::cout << "X1 = " << a << " - " << b << " * i" << std::endl;
+        std::cout << "X2 = " << a << " + " << b << " * i" << std::endl;
+    }
 }
 
 void Solver::Resolve(const std::string& equation)
@@ -47,12 +67,12 @@ void Solver::Resolve(const std::string& equation)
     if (qEquation.size() > 3)
     {
         std::cout << "The polynomial degree is stricly greater than 2, I can't solve." << std::endl;
-        return;     
+        return;
     }
+    std::cout << "Discriminant = b^2 - 4 * a * c" << std::endl;
+    std::cout << "c = " << qEquation[0] << std::endl
+              << "b = " << qEquation[1] << std::endl 
+              << "a = " << qEquation[2] << std::endl;
     discriminate = CalculateDiscriminate(qEquation);
-    std::cout << "Discriminate = " << discriminate << std::endl;
-    if (discriminate >= 0)
-        CalculateRoots(discriminate, qEquation);
-    else
-        std::cout << "Discriminant is strictly negative, there are no solutions." << std::endl;
+    CalculateRoots(discriminate, qEquation);
 }

@@ -5,7 +5,8 @@
 static void ft_usage( void )
 {
 	std::cout << "USAGE : ./computor \"Expression\"" << std::endl;
-	std::cout << "Expression example : \"5 * X^0 + 4 * X^1 - 9.3 * X^2 = 1 * X^0\"" << std::endl;
+	std::cout << "Expression example (Standart Form): \"5 * X^0 + 4 * X^1 - 9.3 * X^2 = 1 * X^0\"" << std::endl;
+	std::cout << "Expression example  (Natural Form): \"5 + 4 * X + X^2 = X^2\"" << std::endl;
 	exit(1);
 }
 

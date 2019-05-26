@@ -3,6 +3,7 @@
 #include <regex>
 #include <cmath>
 #include <iostream>
+#include <sstream>
 
 Parser::Parser() : _errorManager(new ErrorManager())
 {}
@@ -70,6 +71,36 @@ void Parser::ParseMonomials(const std::string& equation, FormOfEquation formOfEq
     }
 }
 
+void Parser::ShowReducedForm(FormOfEquation formOfEquation, mQuadraticEquation& qEquation)
+{
+	std::ostringstream ssOutput;
+
+	std::cout << "Reduced form: ";
+	for (const auto& qEquationPair : qEquation)
+	{
+		if (qEquationPair.second != 0)
+		{
+			if (ssOutput.tellp() || qEquationPair.second < 0)
+				ssOutput << ((qEquationPair.second >= 0) ? "+ " : "- ");
+			if (!(formOfEquation == NaturalForm && (fabs(qEquationPair.second) == 1)))
+				ssOutput << fabs(qEquationPair.second);
+			if (!(formOfEquation == NaturalForm && qEquationPair.first == 0))
+			{
+				if (!(formOfEquation == NaturalForm && (fabs(qEquationPair.second) == 1)))
+					ssOutput << " * ";
+				ssOutput << "X";
+				if (!(formOfEquation == NaturalForm && qEquationPair.first < 2))
+					ssOutput << "^" << qEquationPair.first;			
+			}
+			ssOutput << " ";
+		}
+	}
+	if (!ssOutput.tellp())
+		ssOutput << "0 ";
+	ssOutput << "= 0" << std::endl;
+	std::cout << ssOutput.str();
+}
+
 mQuadraticEquation Parser::Parse(const std::string& equation)
 {
 	mQuadraticEquation	qEquation = {{0, 0.0}, {1, 0.0}, {2, 0.0}};
@@ -77,20 +108,7 @@ mQuadraticEquation Parser::Parse(const std::string& equation)
 
 	std::cout << "Quadrantic Equation: c * X^0 + b * X^1 + a * X^2 = 0" << std::endl;
 	ParseMonomials(equation, formOfEquation, qEquation);
-	std::cout << "Reduced form: ";
-	for (const auto& qEquationPair : qEquation)
-	{
-		if (qEquationPair != *(qEquation.begin()) || qEquationPair.second < 0)
-			std::cout << ((qEquationPair.second >= 0) ? "+ " : "- ");
-		//if (!(formOfEquation == NaturalForm && qEquationPair.second == 0))
-		std::cout << fabs(qEquationPair.second) << " ";
-		if (!(formOfEquation == NaturalForm && (qEquationPair.first == 0 || fabs(qEquationPair.second) == 1)))
-			std::cout << "* ";
-		if (!(formOfEquation == NaturalForm && qEquationPair.first == 0))
-			std::cout << "X" << (!(formOfEquation == NaturalForm && qEquationPair.first < 2)
-						? "^" + std::to_string(qEquationPair.first) : "") << " ";
-	}
-	std::cout << "= 0" << std::endl;
+	ShowReducedForm(formOfEquation, qEquation);
 	if (!qEquation.empty())
 		std::cout << "Polynomial degree: " << (--qEquation.cend())->first << std::endl;
 	return qEquation;

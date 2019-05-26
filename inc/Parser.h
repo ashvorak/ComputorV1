@@ -16,6 +16,7 @@ class Parser
 
 	void ParseMonomial(const std::string& addend, bool isInverse, mQuadraticEquation& qEquation);
 	void ParseMonomials(const std::string& equation, FormOfEquation formOfEquation, mQuadraticEquation& qEquation);
+	void ShowReducedForm(FormOfEquation formOfEquation, mQuadraticEquation& qEquation);
 
 public:
 
